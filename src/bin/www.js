@@ -88,3 +88,32 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+
+
+// Graceful Shutdown 
+
+
+
+process.on('SIGINT', ()=>{ gracefulShutdown('SIGINT') } )
+process.on('SIGTERM', ()=>{ gracefulShutdown('SIGTERM')} )
+
+
+function gracefulShutdown( Signal )
+{
+
+      console.log(` Server Shutting Down With Signal ${ Signal } `)
+
+      server.close( ()=>{
+
+        // close database connection 
+        process.exit(0)
+      })
+
+      // Force Shutdown 
+      setTimeout(()=>{
+          console.log(" Server Force Shutdown ") 
+          process.exit(1) 
+
+      },10000)
+}
